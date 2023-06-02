@@ -1,4 +1,4 @@
-ARG IMAGE=ubuntu:20.04
+ARG IMAGE=ubuntu:22.04
 FROM $IMAGE as builder
 
 COPY sources.list /etc/apt/sources.list
@@ -7,8 +7,12 @@ ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini /tini
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y libfontconfig1 libpcre3 libpcre3-dev git dpkg-dev libpng-dev libssl-dev && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y libfontconfig1 libpcre3 libpcre3-dev git dpkg-dev libpng-dev libssl-dev libxslt-dev && \
     apt-get source nginx && \
+    git clone https://github.com/nginx/njs ngx_http_js_module && \
+    cd /app/nginx-* && \
+    ./configure --add-module=/app/ngx_http_js_module/nginx && \
+    cd /app && \
     git clone https://github.com/chobits/ngx_http_proxy_connect_module && \
     cd /app/nginx-* && \
     patch -p1 < ../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1018.patch && \
