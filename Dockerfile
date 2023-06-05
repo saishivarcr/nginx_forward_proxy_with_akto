@@ -26,7 +26,7 @@ RUN apt-get update && \
 
 ADD https://raw.githubusercontent.com/akto-api-security/nginx-middleware/master/api_log.js /usr/local/nginx/njs/api_log.js
 
-COPY nginx_allowlist.conf /usr/local/nginx/conf/nginx.conf
+COPY nginx.conf /usr/local/nginx/conf/nginx.conf
 
 EXPOSE 8888
 
